@@ -1,0 +1,90 @@
+{
+    "name": "walk",
+    "source": "./src/walk.nim",
+    "items": {
+        "countLeadingSpaces": {
+            "name": "countLeadingSpaces",
+            "fullContent": "",
+            "description": "",
+            "returns": "",
+            "params": {
+                "s": {
+                    "name": "s",
+                    "typeName": " string",
+                    "description": "",
+                    "default": "!exists"
+                }
+            },
+            "example": ""
+        },
+        "Param": {
+            "name": "Param",
+            "fullContent": "    ## A parameter in a proc",
+            "description": "",
+            "returns": "",
+            "params": {},
+            "example": ""
+        },
+        "generateJSON*": {
+            "name": "generateJSON*",
+            "fullContent": "\n    ## This function generates the JSON object with the pre-render content\n    ## @params filePath The path to the file that will be readed and converted to JSON documentation\n    ## @returns The JSON Object\n    ## @example\n    ## # Import the module...\n    ## echo generateJSON(\"test1.nim\")",
+            "description": "",
+            "returns": "",
+            "params": {
+                "filePath": {
+                    "name": "filePath",
+                    "typeName": " string",
+                    "description": "",
+                    "default": "!exists"
+                }
+            },
+            "example": ""
+        },
+        "formatFullContent": {
+            "name": "formatFullContent",
+            "fullContent": "",
+            "description": "",
+            "returns": "",
+            "params": {
+                "res": {
+                    "name": "res",
+                    "typeName": " var WalkCont",
+                    "description": "",
+                    "default": "!exists"
+                }
+            },
+            "example": ""
+        },
+        "main": {
+            "name": "main",
+            "fullContent": "## This module generates a JSON object/file with the content that will be then rendered to other languages like HTML, MarkDown...",
+            "description": "",
+            "returns": "",
+            "params": {},
+            "example": ""
+        },
+        "WalkItem*": {
+            "name": "WalkItem*",
+            "fullContent": "        ## An item in the documentation",
+            "description": "",
+            "returns": "",
+            "params": {},
+            "example": ""
+        },
+        "hello": {
+            "name": "hello",
+            "fullContent": "",
+            "description": "",
+            "returns": "",
+            "params": {
+                "name": {
+                    "name": "name",
+                    "typeName": " string ",
+                    "description": "",
+                    "default": " \"Roger\""
+                }
+            },
+            "example": ""
+        }
+    }
+}

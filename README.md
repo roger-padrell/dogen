@@ -1,4 +1,4 @@
 # dogen
-Better documentation generation in NIM
-
-⚠️This tool is still in construction⚠️
+## DOcumentation GENerator
+Alternative documentation generator in nim
+⚠️This tool is still under construction⚠️
