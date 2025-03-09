@@ -2,14 +2,29 @@
   "name": "genraw",
   "source": "./src/genraw.nim",
   "items": {
+    "WalkItem": {
+      "name": "WalkItem",
+      "fullContent": "## An item in the documentation",
+      "body": "An item in the documentation",
+      "description": "An item in the documentation",
+      "typeName": "type",
+      "returns": {
+        "description": "",
+        "typeName": ""
+      },
+      "params": {},
+      "example": "",
+      "properties": {}
+    },
     "removeWhiteSpace": {
       "name": "removeWhiteSpace",
       "fullContent": "",
       "body": "",
       "description": "",
+      "typeName": "proc",
       "returns": {
         "description": "",
-        "typeName": " string "
+        "typeName": "string "
       },
       "params": {
         "st": {
@@ -19,16 +34,18 @@
           "default": "!exists"
         }
       },
-      "example": ""
+      "example": "",
+      "properties": {}
     },
     "countLeadingSpaces": {
       "name": "countLeadingSpaces",
       "fullContent": "",
       "body": "",
       "description": "",
+      "typeName": "proc",
       "returns": {
         "description": "",
-        "typeName": " int "
+        "typeName": "int "
       },
       "params": {
         "s": {
@@ -38,44 +55,64 @@
           "default": "!exists"
         }
       },
-      "example": ""
+      "example": "",
+      "properties": {}
     },
     "Param": {
       "name": "Param",
       "fullContent": "## A parameter in a proc",
       "body": "A parameter in a proc",
       "description": "A parameter in a proc",
+      "typeName": "type",
       "returns": {
         "description": "",
         "typeName": ""
       },
       "params": {},
-      "example": ""
+      "example": "",
+      "properties": {}
     },
     "generateJSON*": {
       "name": "generateJSON*",
       "fullContent": "## This function generates the JSON object with the pre-render content\n    ## @param filePath The path to the file that will be readed and converted to JSON documentation\n    ## @returns The JSON Object\n    ## @example\n    ## # Import the module...\n    ## echo generateJSON(\"test1.nim\")\n    ## @eox",
       "body": "This function generates the JSON object with the pre-render content\n@paramfilePath\n@returns\n@example",
       "description": "This function generates the JSON object with the pre-render content",
+      "typeName": "proc",
       "returns": {
-        "description": " The JSON Object",
-        "typeName": " JsonNode "
+        "description": "The JSON Object",
+        "typeName": "JsonNode "
       },
       "params": {
         "filePath": {
           "name": "filePath",
           "typeName": "string",
-          "description": " The path to the file that will be readed and converted to JSON documentation",
+          "description": "The path to the file that will be readed and converted to JSON documentation",
           "default": "!exists"
         }
       },
-      "example": " @returns The JSON Object\n @example\n # Import the module...\n echo generateJSON(\"test1.nim\")"
+      "example": " @returns The JSON Object\n @example\n # Import the module...\n echo generateJSON(\"test1.nim\")",
+      "properties": {}
+    },
+    "Property": {
+      "name": "Property",
+      "fullContent": "## A property in a type",
+      "body": "A property in a type",
+      "description": "A property in a type",
+      "typeName": "type",
+      "returns": {
+        "description": "",
+        "typeName": ""
+      },
+      "params": {},
+      "example": "",
+      "properties": {}
     },
     "formatFullContent": {
       "name": "formatFullContent",
       "fullContent": "## Format a WalkCont",
       "body": "Format a WalkCont",
       "description": "Format a WalkCont",
+      "typeName": "proc",
       "returns": {
         "description": "",
         "typeName": ""
@@ -88,56 +125,49 @@
           "default": "!exists"
         }
       },
-      "example": ""
+      "example": "",
+      "properties": {}
     },
     "main": {
       "name": "main",
       "fullContent": "## This module generates a JSON object/file with the content that will be then rendered to other languages like HTML, MarkDown...",
       "body": "This module generates a JSON object/file with the content that will be then rendered to other languages like HTML, MarkDown...",
       "description": "This module generates a JSON object/file with the content that will be then rendered to other languages like HTML, MarkDown...",
+      "typeName": "main",
       "returns": {
         "description": "",
         "typeName": ""
       },
       "params": {},
-      "example": ""
-    },
-    "WalkItem*": {
-      "name": "WalkItem*",
-      "fullContent": "## An item in the documentation",
-      "body": "An item in the documentation",
-      "description": "An item in the documentation",
-      "returns": {
-        "description": "",
-        "typeName": ""
-      },
-      "params": {},
-      "example": ""
+      "example": "",
+      "properties": {}
     },
     "genRaw*": {
       "name": "genRaw*",
       "fullContent": "",
       "body": "",
       "description": "",
+      "typeName": "proc",
       "returns": {
         "description": "",
-        "typeName": " string "
+        "typeName": "string "
       },
       "params": {
+        "outputFilePath": {
+          "name": "outputFilePath",
+          "typeName": "string ",
+          "description": "",
+          "default": "filePath.replace"
+        },
         "filePath": {
           "name": "filePath",
           "typeName": "string",
           "description": "",
           "default": "!exists"
-        },
-        " outputFilePath": {
-          "name": "outputFilePath",
-          "typeName": "string ",
-          "description": "",
-          "default": "filePath.replace"
         }
       },
-      "example": ""
+      "example": "",
+      "properties": {}
     }
   }
 }

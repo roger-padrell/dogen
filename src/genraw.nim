@@ -1,5 +1,5 @@
 import os
-import std/strformat, std/strutils, std/json, std/tables
+import std/strutils, std/json, std/tables
 
 ## This module generates a JSON object/file with the content that will be then rendered to other languages like HTML, MarkDown...
 
@@ -11,21 +11,23 @@ type Param = object
     default*: string = "!exists"
 
 type
-    Returns* = object
+
+    Returns = object
         description*: string
         typeName*: string
 
-    WalkItem* = object
+    WalkItem = object
         ## An item in the documentation
         name*: string
         fullContent*: string = ""
         body*: string = ""
         description*: string = ""
+        typeName*: string = ""
         returns*: Returns = Returns()
         params*: Table[string, Param] = initTable[string, Param]()
         example*: string = ""
-
-    WalkCont* = object
+        
+    WalkCont = object
         name*: string
         source*: string
         items*: Table[string, WalkItem]
@@ -105,7 +107,7 @@ proc formatFullContent(res: var WalkCont) =
                 else:
                     res.items[item].body = "@returns";
                 # Add data to "returns"
-                res.items[item].returns.description = withoutIndent.split("@returns")[1]
+                res.items[item].returns.description = withoutIndent.split("@returns")[1].removeWhiteSpace()
 
             # Add parameter description
             if withoutIndent.startsWith("@param"):
@@ -117,7 +119,7 @@ proc formatFullContent(res: var WalkCont) =
                 else:
                     res.items[item].body = "@param" & paramName;
                 # Add data to "param[name]"
-                res.items[item].params[paramName].description = withoutIndent.split(paramName)[1]
+                res.items[item].params[paramName].description = withoutIndent.split(paramName)[1].removeWhiteSpace()
 
             # Update lineN
             lineN = lineN + 1;
@@ -186,9 +188,9 @@ proc generateJSON*(filePath: string): JsonNode =
                 for p in paramString:
                     let pa = p.split(":")
                     if "=" in pa[1]:
-                        params[pa[0]] = Param(name: pa[0].removeWhiteSpace(), typeName: pa[1].split("=")[0].removeWhiteSpace(), default: pa[1].split("=")[1].removeWhiteSpace())
+                        params[pa[0].removeWhiteSpace()] = Param(name: pa[0].removeWhiteSpace(), typeName: pa[1].split("=")[0].removeWhiteSpace(), default: pa[1].split("=")[1].removeWhiteSpace())
                     else:
-                        params[pa[0]] = Param(name: pa[0].removeWhiteSpace(), typeName: pa[1].removeWhiteSpace())
+                        params[pa[0].removeWhiteSpace()] = Param(name: pa[0].removeWhiteSpace(), typeName: pa[1].removeWhiteSpace())
 
             # Parse return type
             var afterPArr = removedIndent.split(")")
@@ -197,8 +199,9 @@ proc generateJSON*(filePath: string): JsonNode =
             var returnType = "";
             if ":" in afterP:
                 returnType = afterP.split(":")[1].split("=")[0]
+            returnType.removeWhiteSpace()
             # Add as WalkItem
-            res.items[indent[current].name] = WalkItem(name:indent[current].name, params:params, returns: Returns(typeName:returnType))
+            res.items[indent[current].name] = WalkItem(name:indent[current].name, params:params, returns: Returns(typeName:returnType), typeName: "proc")
             addedItems.add(indent[current].name)
         elif removedIndent.startsWith("type") and len(removedIndent.split(" ")) > 1:
             indent.add(ILevel(name:removedIndent.split(" ")[1], kind:"type"))
@@ -217,7 +220,7 @@ proc generateJSON*(filePath: string): JsonNode =
             if indent[current].name in addedItems:
                 res.items[indent[current].name].fullContent = res.items[indent[current].name].fullContent & "\n" & f
             else:
-                res.items[indent[current].name] = WalkItem(name:indent[current].name)
+                res.items[indent[current].name] = WalkItem(name:indent[current].name, typeName: indent[current].kind)
                 res.items[indent[current].name].fullContent = f;
                 addedItems.add(indent[current].name)
 
