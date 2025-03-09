@@ -1,4 +1,4 @@
-import os
+import os, utils
 import std/strutils, std/json, std/tables
 
 ## This module generates a JSON object/file with the content that will be then rendered to other languages like HTML, MarkDown...
@@ -16,7 +16,7 @@ type
         description*: string
         typeName*: string
 
-    WalkItem = object
+    WalkItem* = object
         ## An item in the documentation
         name*: string
         fullContent*: string = ""
@@ -27,7 +27,7 @@ type
         params*: Table[string, Param] = initTable[string, Param]()
         example*: string = ""
         
-    WalkCont = object
+    WalkCont* = object
         name*: string
         source*: string
         items*: Table[string, WalkItem]
@@ -37,22 +37,6 @@ type
         kind*: string
 
     IndentationList = seq[ILevel]
-
-proc countLeadingSpaces(s: string): int =
-  result = 0
-  for c in s:
-    if c == ' ':
-        inc(result)
-    else:
-        break
-
-proc removeWhiteSpace(s: var string) = 
-    s.removePrefix(" ".repeat(s.countLeadingSpaces()))
-
-proc removeWhiteSpace(st: string): string = 
-    var s = st;
-    s.removePrefix(" ".repeat(s.countLeadingSpaces()))
-    return s;
 
 proc formatFullContent(res: var WalkCont) = 
     ## Format a WalkCont
@@ -100,7 +84,6 @@ proc formatFullContent(res: var WalkCont) =
 
             # Add returns description
             if withoutIndent.startsWith("@returns"):
-                inExample = true;
                 # Add "@returns" to body
                 if res.items[item].body != "":
                     res.items[item].body = res.items[item].body & "\n@returns"
@@ -112,7 +95,6 @@ proc formatFullContent(res: var WalkCont) =
             # Add parameter description
             if withoutIndent.startsWith("@param"):
                 let paramName = withoutIndent.split("@param")[1].split(" ")[1]
-                inExample = true;
                 # Add "@param+name" to body
                 if res.items[item].body != "":
                     res.items[item].body = res.items[item].body & "\n@param" & paramName
