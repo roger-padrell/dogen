@@ -1,3 +1,3 @@
-import ../src/walk, std/json
+import ../src/genraw, std/json
 
-echo $(generateJSON("./src/walk.nim"))
+discard genRaw("./src/genraw.nim")

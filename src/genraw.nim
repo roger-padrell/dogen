@@ -131,8 +131,7 @@ proc generateJSON*(filePath: string): JsonNode =
     ## echo generateJSON("test1.nim")
     ## @eox
     if not fileExists(filePath):
-        echo &"File {filePath} does not exist"
-        return;
+        raise newException(Exception,"File " & filePath & " not found")
     let file = readFile(filePath)
     let fileLines = file.split("\n")
 
@@ -226,3 +225,8 @@ proc generateJSON*(filePath: string): JsonNode =
     res.formatFullContent()
 
     return %* res
+
+proc genRaw*(filePath: string, outputFilePath: string = filePath.replace(".nim",".dogen.json")): string = 
+    let content = $pretty(generateJSON(filePath))
+    writeFile(outputFilePath, content)
+    return outputFilePath;
