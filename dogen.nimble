@@ -11,5 +11,4 @@ bin           = @["dogen"]
 # Dependencies
 
 requires "nim >= 2.2.2"
-
 requires "jsony >= 1.1.5"
