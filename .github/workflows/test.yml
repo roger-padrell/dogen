@@ -1,0 +1,18 @@
+name: Run tests on push or pull_request
+on: [push, pull_request]
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: jiro4989/setup-nim-action@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - run: nimble test -y
+    - run: nimble test --gc:orc -y
