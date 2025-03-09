@@ -13,8 +13,7 @@
         "typeName": ""
       },
       "params": {},
-      "example": "",
-      "properties": {}
+      "example": ""
     },
     "removeWhiteSpace": {
       "name": "removeWhiteSpace",
@@ -34,8 +33,7 @@
           "default": "!exists"
         }
       },
-      "example": "",
-      "properties": {}
+      "example": ""
     },
     "countLeadingSpaces": {
       "name": "countLeadingSpaces",
@@ -55,8 +53,7 @@
           "default": "!exists"
         }
       },
-      "example": "",
-      "properties": {}
+      "example": ""
     },
     "Param": {
       "name": "Param",
@@ -69,8 +66,7 @@
         "typeName": ""
       },
       "params": {},
-      "example": "",
-      "properties": {}
+      "example": ""
     },
     "generateJSON*": {
       "name": "generateJSON*",
@@ -90,22 +86,7 @@
           "default": "!exists"
         }
       },
-      "example": " @returns The JSON Object\n @example\n # Import the module...\n echo generateJSON(\"test1.nim\")",
-      "properties": {}
-    },
-    "Property": {
-      "name": "Property",
-      "fullContent": "## A property in a type",
-      "body": "A property in a type",
-      "description": "A property in a type",
-      "typeName": "type",
-      "returns": {
-        "description": "",
-        "typeName": ""
-      },
-      "params": {},
-      "example": "",
-      "properties": {}
+      "example": " @returns The JSON Object\n @example\n # Import the module...\n echo generateJSON(\"test1.nim\")"
     },
     "formatFullContent": {
       "name": "formatFullContent",
@@ -125,8 +106,7 @@
           "default": "!exists"
         }
       },
-      "example": "",
-      "properties": {}
+      "example": ""
     },
     "main": {
       "name": "main",
@@ -139,8 +119,7 @@
         "typeName": ""
       },
       "params": {},
-      "example": "",
-      "properties": {}
+      "example": ""
     },
     "genRaw*": {
       "name": "genRaw*",
@@ -166,8 +145,7 @@
           "default": "!exists"
         }
       },
-      "example": "",
-      "properties": {}
+      "example": ""
     }
   }
 }
