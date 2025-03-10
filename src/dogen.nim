@@ -6,7 +6,7 @@ proc help() =
   echo """
 Welcome to DOGEN
 
-DOGEN is a DOcumentation GENerator in written in, and for, the NIM programming language.
+DOGEN is a DOcumentation GENerator written in, and for, the NIM programming language.
 
 Usage:
   dogen                           | Displays this help message
