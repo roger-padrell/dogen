@@ -1,42 +1,7 @@
-import os, utils
+import os, utils, config
 import std/strutils, std/json, std/tables
 
 ## This module generates a JSON object/file with the content that will be then rendered to other languages like HTML, MarkDown...
-
-type Param = object
-    ## A parameter in a proc
-    name*: string
-    typeName*: string
-    description*: string
-    default*: string = "!exists"
-
-type
-
-    Returns = object
-        description*: string
-        typeName*: string
-
-    WalkItem* = object
-        ## An item in the documentation
-        name*: string
-        fullContent*: string = ""
-        body*: string = ""
-        description*: string = ""
-        typeName*: string = ""
-        returns*: Returns = Returns()
-        params*: Table[string, Param] = initTable[string, Param]()
-        example*: string = ""
-        
-    WalkCont* = object
-        name*: string
-        source*: string
-        items*: Table[string, WalkItem]
-
-    ILevel = object
-        name*: string
-        kind*: string
-
-    IndentationList = seq[ILevel]
 
 proc formatFullContent(res: var WalkCont) = 
     ## Format a WalkCont
@@ -50,8 +15,16 @@ proc formatFullContent(res: var WalkCont) =
             # Remove the DocComent
             var noComSeq: seq[string] = line.split("##");
             noComSeq.del(0)
-            let withoutComment = noComSeq.join("##")
-            let withoutIndent = withoutComment.removeWhiteSpace();
+            var withoutComment = noComSeq.join("##")
+
+            if "##" notin line:
+                withoutComment = line;
+            
+            let withIndnt = withoutComment;
+            let withoutIndent = withIndnt.removeWhiteSpace()
+
+            if withoutIndent == "":
+                continue;
 
             # Set as description if it's first line
             if lineN == 0:
@@ -103,10 +76,14 @@ proc formatFullContent(res: var WalkCont) =
                 # Add data to "param[name]"
                 res.items[item].params[paramName].description = withoutIndent.split(paramName)[1].removeWhiteSpace()
 
+            # Add @object-<objectName> if it's main and object exists
+            if (withoutIndent.startsWith("@object-")) and (item == "main") and (withoutIndent.replace("@object-","") in res.items) and (withoutIndent.replace("@object-","") != "main") and (withoutIndent notin res.items["main"].body):
+                res.items["main"].body = res.items["main"].body & "\n" & withoutIndent;
+
             # Update lineN
             lineN = lineN + 1;
 
-proc generateJSON*(filePath: string): JsonNode = 
+proc generateJSON*(filePath: string, config: Config = Config()): JsonNode = 
     ## This function generates the JSON object with the pre-render content
     ## @param filePath The path to the file that will be readed and converted to JSON documentation
     ## @returns The JSON Object
@@ -182,12 +159,16 @@ proc generateJSON*(filePath: string): JsonNode =
             if ":" in afterP:
                 returnType = afterP.split(":")[1].split("=")[0]
             returnType.removeWhiteSpace()
+            # Add to main
+            res.items["main"].fullContent = res.items["main"].fullContent & "\n@object-" & indent[current].name
             # Add as WalkItem
             res.items[indent[current].name] = WalkItem(name:indent[current].name, params:params, returns: Returns(typeName:returnType), typeName: "proc")
             addedItems.add(indent[current].name)
         elif removedIndent.startsWith("type") and len(removedIndent.split(" ")) > 1:
             indent.add(ILevel(name:removedIndent.split(" ")[1], kind:"type"))
             current = current + 1;
+            # Add to main
+            res.items["main"].fullContent = res.items["main"].fullContent & "\n@object-" & indent[current].name
         elif removedIndent.startsWith("type"):
             multipleTypes = true;
             indent.add(ILevel(name:"*multipleTypeGen*", kind:"type"))
@@ -195,6 +176,8 @@ proc generateJSON*(filePath: string): JsonNode =
         elif multipleTypes and ("=" in removedIndent):
             indent.add(ILevel(name:removedIndent.split(" ")[0], kind:"type"))
             current = current + 1;
+            # Add to main
+            res.items["main"].fullContent = res.items["main"].fullContent & "\n@object-" & indent[current].name
 
         # Use if it's a documentation coment (##)
         # Classify each doccoment in the "fullContent" property
@@ -205,13 +188,18 @@ proc generateJSON*(filePath: string): JsonNode =
                 res.items[indent[current].name] = WalkItem(name:indent[current].name, typeName: indent[current].kind)
                 res.items[indent[current].name].fullContent = f;
                 addedItems.add(indent[current].name)
+                # Add to main
+                res.items["main"].fullContent = res.items["main"].fullContent & "\n@object-" & indent[current].name
+
+    # Configurate the result
+    res.useConfig(config)
 
     # Format the "fullContent" into specialized properties
     res.formatFullContent()
 
     return %* res
 
-proc genRaw*(filePath: string, outputFilePath: string = filePath.replace(".nim",".dogen.json")): string = 
-    let content = $pretty(generateJSON(filePath))
+proc genRaw*(filePath: string, outputFilePath: string = filePath.replace(".nim",".dogen.json"), config: Config = Config()): string = 
+    let content = $pretty(generateJSON(filePath, config))
     writeFile(outputFilePath, content)
     return outputFilePath;

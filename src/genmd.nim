@@ -1,4 +1,4 @@
-import parsedgn, strformat, tables, strutils, genraw, json, utils
+import parsedgn, strformat, tables, strutils, utils
 
 proc parseSingleItem(i: WalkItem): string = 
     var res: string = "\n## " & i.name & " (`" & i.typeName & "`)";
@@ -46,21 +46,32 @@ proc generateMD*(dogen: WalkCont): string =
 # {data.name}"""
 
     # Add main
-    var main = (parseSingleItem(data.items["main"])).replace("## main (`main`)","")
-    md = md & "\n" & main;
+    var main = data.items["main"];
+    md = md & "\n" & main.description;
 
-    # Add all but main
+    # Create added record
+    var added: Table[string, bool] = initTable[string,bool]();
     for item in data.items.keys:
-        if data.items[item].name != "main" and data.items[item].typeName != "main":
+        if item != "main":
+            added[item] = false;
+
+    # Follow main body and add objects if necessary
+    for line in main.body.split("\n"):
+        if not line.startsWith("@"):
+            md = md & "\n" & line;
+        elif line.startsWith("@object-"):
+            let objectName = line.replace("@object-","")
+            if added[objectName] == true:
+                continue;
+            added[objectName] = true;
+            md = md & "\n" & parseSingleItem(data.items[objectName])
+
+    # Add unaded objects
+    for item in added.keys:
+        if added[item] == false:
             md = md & "\n" & parseSingleItem(data.items[item])
 
     return md;
-
-proc NIMtoMD*(filePath: string, outputFilePath: string = filePath.replace(".nim",".md")): string = 
-    let dogen = parseDOGEN($generateJSON(filePath))
-    let content = generateMD(dogen)
-    writeFile(outputFilePath, content)
-    return outputFilePath;
 
 proc DOGENtoMD*(filePath: string, outputFilePath: string = filePath.replace(".dogen.json",".md")): string = 
     let content = generateMD(parseDOGENfile(filePath))
